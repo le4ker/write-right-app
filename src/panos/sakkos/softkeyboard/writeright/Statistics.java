@@ -79,6 +79,10 @@ public class Statistics
     	return timestamps.get(0);
     }
 
+    public List<Long> GetTimestamps()
+    {
+    	return timestamps;
+    }
 
     @Override public String toString()
     {
