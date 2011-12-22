@@ -43,6 +43,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
  
 	String []wordsColumns = new String[3];
 	String []essentialsColumns = new String[2];
+	String []timestampsColumns = new String[2];
 	
 	/* upgrade stuff */
 	
@@ -66,6 +67,9 @@ public class DataBaseHelper extends SQLiteOpenHelper
         
         essentialsColumns[0] = "k";
         essentialsColumns[1] = "continuous_successes";
+        
+        timestampsColumns[0] = "timestamp";
+        timestampsColumns[1] = "word_id";
     }	
  
   /**
@@ -190,6 +194,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
 	
 	public void UpdateWords(String word, Statistics statistics)
 	{
+		//TODO handle the multiple timestamps
 		myDataBase.execSQL("UPDATE Words SET usage=" + statistics.GetPopularity() + ", timestamp='" + Long.toString(statistics.GetTimestamp()) + "' WHERE word='" + word + "'");
 	}
 	
@@ -226,6 +231,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
 	
 	private void DeleteWordBeforeTimestamp(long timestamp)
 	{
+		//TODO delete also the corresponding timestamps from Timestamps table
 		myDataBase.execSQL("DELETE FROM Words WHERE timestamp ='" + Long.toString(timestamp) +"';");
 	}
 }
