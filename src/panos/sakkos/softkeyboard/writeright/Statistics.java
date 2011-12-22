@@ -25,28 +25,34 @@ package panos.sakkos.softkeyboard.writeright;
  * @author Panos Sakkos
  */
 
+import java.util.List;
+import java.util.ArrayList;
+
 public class Statistics
 {
     private int usage;
-    private long timestamp;
+    private List<Long> timestamps;
 
     public Statistics()
     {
         this.usage = 1;
-        timestamp = System.currentTimeMillis();
+        timestamps = new ArrayList<Long>();
+        timestamps.add(0, Long.valueOf((System.currentTimeMillis())));
     }
     
     
     public Statistics(int usage)
     {
         this.usage = usage;
-        timestamp = System.currentTimeMillis();
+        timestamps = new ArrayList<Long>();
+        timestamps.add(0, Long.valueOf((System.currentTimeMillis())));
     }
 
     public Statistics(int usage, long timestamp)
     {
     	this.usage = usage;
-    	this.timestamp = timestamp;
+        timestamps = new ArrayList<Long>();
+        timestamps.add(0, Long.valueOf(timestamp));
     }
     
     /**
@@ -56,7 +62,7 @@ public class Statistics
     public void WordTyped()
     {
         usage++;
-        timestamp = System.currentTimeMillis();
+        timestamps.add(0, Long.valueOf((System.currentTimeMillis())));
     }
 
     /**
@@ -70,7 +76,7 @@ public class Statistics
     
     public long GetTimestamp()
     {
-    	return timestamp;
+    	return timestamps.get(0);
     }
 
 
