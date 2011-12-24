@@ -84,6 +84,11 @@ public class Statistics
     	return timestamps;
     }
 
+    public void AddTimestamp(long timestamp)
+    {
+    	timestamps.add(0, Long.valueOf(timestamp));
+    }
+    
     @Override public String toString()
     {
         return Integer.toString(usage);

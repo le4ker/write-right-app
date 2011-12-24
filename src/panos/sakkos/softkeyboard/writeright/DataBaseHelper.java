@@ -44,6 +44,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
 	String []wordsColumns = new String[3];
 	String []essentialsColumns = new String[2];
 	String []timestampsColumns = new String[2];
+    String []wordsId = new String[1];
 	
 	/* upgrade stuff */
 	
@@ -70,6 +71,8 @@ public class DataBaseHelper extends SQLiteOpenHelper
         
         timestampsColumns[0] = "timestamp";
         timestampsColumns[1] = "word_id";
+        
+        wordsId[0] = "_id";
     }	
  
   /**
@@ -194,8 +197,16 @@ public class DataBaseHelper extends SQLiteOpenHelper
 	
 	public void UpdateWords(String word, Statistics statistics)
 	{
-		//TODO handle the multiple timestamps
 		myDataBase.execSQL("UPDATE Words SET usage=" + statistics.GetPopularity() + ", timestamp='" + Long.toString(statistics.GetTimestamp()) + "' WHERE word='" + word + "'");
+
+		int count = myDataBase.query("Words", wordsColumns, null, null, null, null, null).getCount();
+		
+		/* Add the new timestamp to the Timestamps table */
+		
+		Cursor cursor = myDataBase.query("Words", wordsId, "word='" + word + "'", null, null, null, null);		
+		int word_id = cursor.getInt(1);
+		
+		myDataBase.execSQL("INSERT INTO Timestamps VALUES (" + Integer.toString(count) + ", '" + Long.toString(statistics.GetTimestamp()) + "', " + Integer.toString(word_id) +")");
 	}
 	
 	public void AddNewWord(String word)
@@ -232,7 +243,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
 	private void DeleteWordBeforeTimestamp(long timestamp)
 	{
 		//TODO delete also the corresponding timestamps from Timestamps table
-		myDataBase.execSQL("DELETE FROM Words WHERE timestamp ='" + Long.toString(timestamp) +"';");
+		myDataBase.execSQL("DELETE FROM Words WHERE timestamp <='" + Long.toString(timestamp) +"';");
 	}
 }
 
