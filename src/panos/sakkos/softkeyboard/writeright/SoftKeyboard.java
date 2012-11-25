@@ -44,6 +44,7 @@ import panos.sakkos.softkeyboard.writeright.R;
 public class SoftKeyboard extends InputMethodService implements KeyboardView.OnKeyboardActionListener 
 {
     static final char NO_INPUT = 0;
+    static final int CONTINOUS_DELETE_THRESHLOD = 3;
     private KeyboardView mInputView;
     
     private StringBuilder mComposing = new StringBuilder();
@@ -66,6 +67,7 @@ public class SoftKeyboard extends InputMethodService implements KeyboardView.OnK
     private int k = 26;
     private int continuousSuccesses = 0;
     private final int AGGRESIVE_THRESHOLD = 5;
+    private int continuousDeleteHits = 0;
     
     private boolean unprobableKeysMoved = false;
     List<Character> probableKeys;
@@ -144,7 +146,7 @@ public class SoftKeyboard extends InputMethodService implements KeyboardView.OnK
 		
 		if(mComposing.length() > 0)
 		{
-			TopKResize(predictor.GetPredictions());
+			ShrinkLessK(predictor.GetPredictions());
 		}
     }
     
@@ -315,7 +317,10 @@ public class SoftKeyboard extends InputMethodService implements KeyboardView.OnK
         Log.i("DEBUG", "onupdateSelection");		        
 
 
-//code version 2 for fixing the reader-twitter bug ;). Code bellow was moved here from onrelease method
+/*
+ * code version 2 for fixing the bug with the prediction enabling in "bad" textboxes after a wrd separator was typed ;).
+ * Code bellow was moved here from onrelease method
+ */
         
         if(PredictionFriendlyInput())
         {
@@ -506,17 +511,31 @@ public class SoftKeyboard extends InputMethodService implements KeyboardView.OnK
         updateShiftKeyState(getCurrentInputEditorInfo());
     }
         
-    private void handleBackspace() {
-        final int length = mComposing.length();
-        if (length > 1) {
+    private void handleBackspace()
+    {
+        int length = mComposing.length();
+        
+        if(continuousDeleteHits > CONTINOUS_DELETE_THRESHLOD && isWordSeparator(FirstCharacterBeforeCursor()) == false && length != 0)
+        {
+        	//TODO delete the composing word
+        	getCurrentInputConnection().deleteSurroundingText(GetLastWordBeforeCursor().length() + 1, 0);
+        }
+        else if (length > 1) 
+        {
             mComposing.delete(length - 1, length);
             getCurrentInputConnection().setComposingText(mComposing, 1);
-        } else if (length > 0) {
+        }
+        else if (length > 0)
+        {
             mComposing.setLength(0);
             getCurrentInputConnection().commitText("", 0);
-        } else {
+        }
+        else
+        {
             keyDownUp(KeyEvent.KEYCODE_DEL);
         }
+        
+        continuousDeleteHits++;
         updateShiftKeyState(getCurrentInputEditorInfo());
     }
 
@@ -628,7 +647,7 @@ public class SoftKeyboard extends InputMethodService implements KeyboardView.OnK
 
     	if (isWordSeparator(primaryCode)) 
         {
-    		Log.d("DEBUG", "WORD separator PRESSED");
+    		Log.d("DEBUG", "WORD SEPARATOR PRESSED");
         	WordseparatorTyped();
         }
         else if (Character.isLetter(primaryCode))
@@ -664,7 +683,7 @@ public class SoftKeyboard extends InputMethodService implements KeyboardView.OnK
 		{
 			/* "Backward" top k resize */
 			
-			BackwardTopKResize();
+			BackwardShrinkLessK();
 		}
 		else
 		{
@@ -674,7 +693,7 @@ public class SoftKeyboard extends InputMethodService implements KeyboardView.OnK
 		}
 	}
 
-	private void BackwardTopKResize() 
+	private void BackwardShrinkLessK() 
 	{
 		predictor.SetIdle(); predictor.SetNotIdle();
 		for(int i = 0; i < GetLastWordBeforeCursor().length(); i++)
@@ -689,7 +708,7 @@ public class SoftKeyboard extends InputMethodService implements KeyboardView.OnK
 			}
 		}
 		
-		TopKResize(predictor.GetPredictions());
+		ShrinkLessK(predictor.GetPredictions());
 	}
 
 	private void CharacterTyped(int primaryCode) 
@@ -714,8 +733,12 @@ public class SoftKeyboard extends InputMethodService implements KeyboardView.OnK
 		}
 		else
 		{			
-			TopKResize(predictions);        
+			ShrinkLessK(predictions);        
 		}
+
+		/* Restore the continuous delete hits variable */
+		
+		continuousDeleteHits = 0;		
 	}
 
 	private void WordseparatorTyped() 
@@ -744,6 +767,10 @@ public class SoftKeyboard extends InputMethodService implements KeyboardView.OnK
 		/* Restore initial key sizes when a word is typed */
 		
 		RestoreInitialSizes();
+		
+		/* Restore the continuous delete hit variable */
+		
+		continuousDeleteHits = 0;
 	}
     
 	/* Checks for external memory read/write availability. If available
@@ -844,7 +871,7 @@ public class SoftKeyboard extends InputMethodService implements KeyboardView.OnK
     		mInputView.invalidateAllKeys();
     }
     
-    private void TopKResize(HashMap<Character, Float> predictions)
+    private void ShrinkLessK(HashMap<Character, Float> predictions)
     {    	    	
     	/* Find top k next predicted letter */
     	

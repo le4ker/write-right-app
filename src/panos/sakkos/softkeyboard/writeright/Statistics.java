@@ -73,7 +73,7 @@ public class Statistics
     {
         return usage;
     }
-    
+
     public long GetTimestamp()
     {
     	return timestamps.get(0);

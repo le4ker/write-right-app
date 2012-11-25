@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        android:versionCode="3"
-        android:versionName="0.9.1.1" package="panos.sakkos.softkeyboard.writeright">
+        android:versionCode="1"
+        android:versionName="0.9.1.2" package="panos.sakkos.softkeyboard.writeright">
 		<uses-permission android:name="android.permission.VIBRATE"/>
 		<uses-sdk android:minSdkVersion="7" />
-    <application android:label="@string/ime_name" android:minSdkVersion="7" android:debuggable="false" android:icon="@drawable/icon">
+    <application android:label="@string/ime_name" android:minSdkVersion="7" android:debuggable="true" android:icon="@drawable/icon">
         <service android:name="SoftKeyboard"
                 android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>
