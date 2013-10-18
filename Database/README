@@ -1,0 +1,15 @@
+This folder contains the SQLite database file, a sample of about 40.000 words and a C source file
+that builds a query which can be run in an empty database and populate it.
+
+Run
+	gcc -o build_query build_query
+and then
+	head -n <number of desired words to insert> words.txt |  ./build_query > query.txt
+
+The words.txt contains the top 40.000 commonly used words in United States, according to a research that
+a related organization did (don't remember its name, I will update the current readme with its name in the future).
+The words.txt file contains some data that I don't need, so the build_query also ignores these data in order to create the query.
+
+For more information about the database contact me at my personal email.
+
+Copyright (C) June 2011  Panagiotis Sakkos <panos.sakkos@gmail.com>
