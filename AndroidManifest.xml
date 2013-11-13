@@ -1,8 +1,10 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" 
-        package="di.kdd.writeright">
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-sdk android:minSdkVersion="11" />
-    <application android:label="@string/ime_name" android:debuggable="true">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        android:versionCode="3"
+        android:versionName="0.9.1.1" package="panos.sakkos.softkeyboard.writeright">
+		<uses-permission android:name="android.permission.VIBRATE"/>
+		<uses-sdk android:minSdkVersion="7" />
+    <application android:label="@string/ime_name" android:minSdkVersion="7" android:debuggable="false" android:icon="@drawable/icon">
         <service android:name="SoftKeyboard"
                 android:permission="android.permission.BIND_INPUT_METHOD">
             <intent-filter>
@@ -10,12 +12,5 @@
             </intent-filter>
             <meta-data android:name="android.view.im" android:resource="@xml/method" />
         </service>
-
-        <activity android:name="di.kdd.android.writeright.ImePreferences" android:label="@string/settings_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
-
-    </application>
+	</application>
 </manifest>

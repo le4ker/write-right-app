@@ -1,0 +1,43 @@
+Product name:	WriteRight
+Version:		0.9.1.1
+Date:			June 2011
+License:		GNU Affero General Public License
+Author:			Panagiotis Sakkos <panos.sakkos@gmail.com>
+
+	+------------+
+	|Introduction|
+	+------------+
+
+WriteRight is an alternative Android Input Method. Its magic is that it shrinks the 
+virtual keys  in order to help the writer in composing text. It uses personalized 
+predictions that are based on usage of the words as well as the time that these words
+were typed.
+
+You can see it in action here:
+	http://www.youtube.com/watch?v=LjigGHm_1KY
+
+You can download for free the keyboard here: 
+	https://market.android.com/details?id=panos.sakkos.softkeyboard.writeright
+
+	+-----------+
+	|Description|
+	+-----------+ 
+
+//TODO
+
+	+------+
+	|Thanks|
+	+------+
+	
+Many thanks to Athanasios Dallas for the WriteRight illustration and to Dimitrios Kotsakos for
+coming up with the idea of naming this product "WriteRight".
+
+	+-----------+
+	|Future Work|
+	+-----------+
+	
+I want to add the factor of place in my prediction algorithm, beacause our written communication is
+partly associated with the place that we communicate. Also I want to record all the timestamps for every
+word in order to produce predictions that are based also in the current time. 
+
+Copyright (C) June 2011  Panagiotis Sakkos <panos.sakkos@gmail.com>
