@@ -17,7 +17,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package panos.sakkos.softkeyboard.writeright;
+package panos.sakkos.softkeyboard;
 
 import android.content.Context;
 import android.inputmethodservice.Keyboard;

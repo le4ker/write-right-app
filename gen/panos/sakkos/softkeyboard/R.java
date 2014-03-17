@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package panos.sakkos.softkeyboard.writeright;
+package panos.sakkos.softkeyboard;
 
 public final class R {
     public static final class attr {

@@ -17,7 +17,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package panos.sakkos.softkeyboard.writeright;
+package panos.sakkos.softkeyboard;
 
 import java.util.HashMap;
 
@@ -32,6 +32,7 @@ public class Trie
 {
     private int size;
     private int popularity;
+    private boolean inSubLanguage = false;
     private HashMap<Character, Trie> subTries;
 
     public Trie()
@@ -66,6 +67,15 @@ public class Trie
         InnerAdd(word);
     }
 
+    public void AddInSubLanguage(String word)
+    {
+        /*Ignore capitals */
+
+        word = word.toLowerCase();
+
+        InnerAddInSubLanguage(word);
+    }
+
     public void LoadFromDB(Cursor cursor)
     {
     	String word;
@@ -75,7 +85,19 @@ public class Trie
     		this.Add(word);
     	}
     	
-    	cursor.moveToFirst();
+    	cursor.moveToFirst();    	
+    }
+
+    public void LoadSubLanguageFromDB(Cursor cursor)
+    {
+    	String word;
+    	while(cursor.moveToNext())
+    	{
+    		word = cursor.getString(0);
+    		this.AddInSubLanguage(word);
+    	}
+    	
+    	cursor.moveToFirst();    	
     }
 
     /**
@@ -158,6 +180,11 @@ public class Trie
          return ((Trie) subTries.get(new Character(characterTyped)));
      }
 
+     public boolean IsInSubLanguage(char nextLetter)
+     {
+    	 return subTries.get(nextLetter) != null ? ((Trie) subTries.get(nextLetter)).IsInSubLanguage() : false;
+     }
+     
      public int GetPopularity(char nextLetter)
      {
         /* Ignore case sensitivity */
@@ -190,6 +217,26 @@ public class Trie
 
         ((Trie)subTries.get(firstChar)).InnerAdd(postfix);
         size++;
+    }
+
+    private void InnerAddInSubLanguage(String word)
+    {
+        if(word == null || word.length() == 0)
+        {
+            return;
+        }
+
+        char firstChar = word.charAt(0);
+        String postfix = word.substring(1);
+
+        if( subTries.get(firstChar) == null) //REVIEW
+        {
+            subTries.put(firstChar, new Trie());
+        }
+
+        ((Trie)subTries.get(firstChar)).InnerAddInSubLanguage(postfix);
+        size++;
+        inSubLanguage = true;
     }
 
     /**
@@ -228,6 +275,11 @@ public class Trie
         return popularity;
     }
 
+    private boolean IsInSubLanguage()
+    {
+    	return inSubLanguage;
+    }
+    
     public static boolean ValidWord(String word)
     {
         if (word.contains("0"))

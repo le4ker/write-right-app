@@ -17,7 +17,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package panos.sakkos.softkeyboard.writeright;
+package panos.sakkos.softkeyboard;
 
 /**
  * A class that keeps the usage statistics about the words that were typed

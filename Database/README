@@ -10,6 +10,3 @@ The words.txt contains the top 40.000 commonly used words in United States, acco
 a related organization did (don't remember its name, I will update the current readme with its name in the future).
 The words.txt file contains some data that I don't need, so the build_query also ignores these data in order to create the query.
 
-For more information about the database contact me at my personal email.
-
-Copyright (C) June 2011  Panagiotis Sakkos <panos.sakkos@gmail.com>

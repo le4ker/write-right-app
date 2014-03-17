@@ -17,7 +17,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package panos.sakkos.softkeyboard.writeright;
+package panos.sakkos.softkeyboard;
 
 import java.util.HashMap;
 import android.database.Cursor;
@@ -60,6 +60,9 @@ public class Predictor
     	
     	root = new Trie();
     	root.LoadFromDB(cursor);
+    	
+    	cursor = db.GetSubLanguage();
+    	root.LoadSubLanguageFromDB(cursor);
 
 		knowledge = new HashMap<String, Statistics>();
 
@@ -132,14 +135,22 @@ public class Predictor
         {
             for(char possibleNextLetter : latinLetters)
             {
-                popularity = subTrie.GetPopularity(possibleNextLetter);
-                postfixesCounter = subTrie.GetSubTrieSize(possibleNextLetter);
-
-                evaluation = Evaluate(popularity, postfixesCounter);
-
-                /* Normalize evaluation in order to express probability */
-
-                predictions.put(new Character(possibleNextLetter), (float) Math.round(evaluation / evaluationSum * 100) / 100 );
+            	if (subTrie.IsInSubLanguage(possibleNextLetter))
+            	{
+	                predictions.put(new Character(possibleNextLetter), (float) 1.0f);       
+	                Log.d("DEBUG", new Character(possibleNextLetter) + " is in sublanguage!");
+            	}
+            	else
+            	{
+	                popularity = subTrie.GetPopularity(possibleNextLetter);
+	                postfixesCounter = subTrie.GetSubTrieSize(possibleNextLetter);
+	
+	                evaluation = Evaluate(popularity, postfixesCounter);
+	
+	                /* Normalize evaluation in order to express probability */
+	
+	                predictions.put(new Character(possibleNextLetter), (float) Math.round(evaluation / evaluationSum * 100) / 100 );
+            	}
             }
         }
 

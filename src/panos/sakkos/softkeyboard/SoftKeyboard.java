@@ -17,7 +17,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package panos.sakkos.softkeyboard.writeright;
+package panos.sakkos.softkeyboard;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.TreeSet;
 
-import panos.sakkos.softkeyboard.writeright.R;
+import panos.sakkos.softkeyboard.R;
 
 public class SoftKeyboard extends InputMethodService implements KeyboardView.OnKeyboardActionListener 
 {

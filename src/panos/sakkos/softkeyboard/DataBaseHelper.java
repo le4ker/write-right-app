@@ -17,7 +17,7 @@
  *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package panos.sakkos.softkeyboard.writeright;
+package panos.sakkos.softkeyboard;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,7 +35,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataBaseHelper extends SQLiteOpenHelper
 {	 
-    private static String DB_PATH = "/data/data/panos.sakkos.softkeyboard.writeright/databases/";
+    private static String DB_PATH = "/data/data/panos.sakkos.softkeyboard/databases/";
     private static String DB_NAME = "writeright.db";
  
     private SQLiteDatabase myDataBase; 
@@ -43,6 +43,7 @@ public class DataBaseHelper extends SQLiteOpenHelper
  
 	String []wordsColumns = new String[3];
 	String []essentialsColumns = new String[2];
+	String []subLanguageColumns = new String[1];
 	
 	/* upgrade stuff */
 	
@@ -66,6 +67,8 @@ public class DataBaseHelper extends SQLiteOpenHelper
         
         essentialsColumns[0] = "k";
         essentialsColumns[1] = "continuous_successes";
+        
+        subLanguageColumns[0] = "word";
     }	
  
   /**
@@ -173,6 +176,11 @@ public class DataBaseHelper extends SQLiteOpenHelper
  
 	/* Helper methods to interact with the database */
 
+	public Cursor GetSubLanguage()
+	{
+		return myDataBase.query("SubLanguage", subLanguageColumns, null, null, null, null, null);			
+	}
+	
 	public Cursor GetEssentials()
 	{
 		return myDataBase.query("Essentials", essentialsColumns, null, null, null, null, null);		
